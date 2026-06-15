@@ -1,0 +1,1354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Before You Hire Lead Gen — Acquisition Leak Check</title>
+<style>
+:root{
+  --bg:#0f1115;
+  --card:#171b22;
+  --card2:#202633;
+  --text:#f4f4f5;
+  --muted:#b9c0cc;
+  --line:#303846;
+  --accent:#f5c16c;
+  --accent2:#8bd3ff;
+  --ok:#9cffb1;
+  --warn:#ffd27d;
+  --danger:#ff9b9b;
+  --radius:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at top left,rgba(245,193,108,.12),transparent 34%),
+    radial-gradient(circle at top right,rgba(139,211,255,.10),transparent 35%),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  line-height:1.55;
+}
+.wrap{max-width:1280px;margin:0 auto;padding:32px 18px 64px}
+.hero,.card{
+  border:1px solid var(--line);
+  background:rgba(23,27,34,.9);
+  border-radius:var(--radius);
+  box-shadow:0 20px 60px rgba(0,0,0,.28);
+}
+.hero{
+  padding:34px;
+  background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.015));
+}
+.eyebrow{
+  color:var(--accent);
+  font-weight:800;
+  font-size:13px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+h1{font-size:clamp(34px,6vw,64px);line-height:.98;margin:0 0 18px;letter-spacing:-.05em}
+h2{margin:0 0 10px;font-size:27px;letter-spacing:-.025em}
+h3{margin:0 0 8px;font-size:18px}
+p{margin-top:0}
+.hero p{max-width:790px;font-size:19px;color:var(--muted);margin:0 0 22px}
+.muted{color:var(--muted)}
+.small{font-size:14px;color:var(--muted)}
+.ctaRow{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.button,button{
+  border:0;
+  cursor:pointer;
+  padding:13px 18px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:15px;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.primary{background:var(--accent);color:#17100a}
+.secondary{background:#fff;color:#111827}
+.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+button:disabled{opacity:.58;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:minmax(640px,1.35fr) minmax(390px,.9fr);gap:22px;margin-top:18px;align-items:start}
+@media(max-width:1060px){.grid{grid-template-columns:1fr}.hero{padding:24px}.scoreBox{position:static!important}}
+.card{padding:22px}
+.scoreBox{position:sticky;top:16px;align-self:start}
+.qualifierBlock,.check{padding:18px 0;border-top:1px solid var(--line)}
+.qualifierBlock:first-of-type{border-top:0;padding-top:4px}
+.checkHead{display:block;margin-bottom:10px}
+.checkHead h3{font-size:20px;line-height:1.25;margin-bottom:4px}
+.checkHead .small{display:block;color:#d2d8e4;font-size:14px}
+label{color:#edf2f7;font-size:15px;font-weight:750;line-height:1.35;display:block;margin-bottom:8px}
+select,input,textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#0f131b;
+  color:var(--text);
+  padding:12px 13px;
+  font-size:15.5px;
+  line-height:1.35;
+  outline:none;
+}
+select:focus,input:focus,textarea:focus{border-color:rgba(245,193,108,.7)}
+textarea{min-height:92px;resize:vertical}
+.formRow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.setupGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.setupGrid .field.wide{grid-column:1/-1}
+.fieldHint{font-size:12.5px;color:var(--muted);margin-top:6px}
+@media(max-width:700px){.formRow,.setupGrid{grid-template-columns:1fr}.setupGrid .field.wide{grid-column:auto}}
+.bigScore{font-size:64px;font-weight:900;letter-spacing:-.06em;line-height:1;margin:8px 0}
+.status{
+  display:inline-flex;
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:13px;
+  font-weight:800;
+  background:var(--card2);
+  color:var(--accent2);
+  margin-bottom:12px;
+}
+.status.warn{color:var(--warn)}
+.status.danger{color:var(--danger)}
+.leakList{margin:14px 0 0;padding-left:18px;color:var(--muted)}
+.leakList li{margin-bottom:8px}
+.divider{height:1px;background:var(--line);margin:20px 0}
+.pillRow{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.pill{padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:13px;background:rgba(255,255,255,.025)}
+.footer{text-align:center;color:var(--muted);font-size:13px;margin-top:28px}
+.copyNotice{display:none;color:var(--ok);font-size:13px;margin-top:10px;font-weight:700}
+.copyNotice.show{display:block}
+.resultText{white-space:pre-line;background:#0d1118;border:1px solid var(--line);border-radius:14px;padding:14px;color:#d9dee8;font-size:14px;line-height:1.45;max-height:430px;overflow:auto}
+
+.scoreControls{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 8px}
+.scoreBtn{width:42px;height:42px;border-radius:13px;border:1px solid var(--line);background:#0f131b;color:var(--text);font-weight:900;font-size:15px;padding:0;transition:transform .12s ease,border-color .12s ease,background .12s ease,color .12s ease}
+.scoreBtn:hover{border-color:rgba(245,193,108,.68);transform:translateY(-1px)}
+.scoreBtn.selected{background:var(--accent);border-color:var(--accent);color:#17100a;box-shadow:0 10px 26px rgba(245,193,108,.16)}
+.scoreExplain{min-height:22px;color:var(--muted);font-size:14px;margin-top:6px}
+.scoreExplain strong{color:var(--accent)}
+.readText{background:#0d1118;border:1px solid var(--line);border-radius:16px;padding:16px;color:#e4e8f1;font-size:15px;line-height:1.52}
+.readIntro{border:1px solid rgba(245,193,108,.24);background:linear-gradient(135deg,rgba(245,193,108,.11),rgba(139,211,255,.045));border-radius:14px;padding:14px;margin-bottom:12px}
+.readIntro h4,.readCard h4,.patternBox h4{margin:0 0 7px;font-size:16px;letter-spacing:-.01em}
+.readIntro p,.readCard p,.patternBox p{margin:0 0 9px;color:#d9dee8}
+.readIntro p:last-child,.readCard p:last-child,.patternBox p:last-child{margin-bottom:0}
+.readKicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:900;margin-bottom:6px}
+.readScoreRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.readScorePill{border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:13px;font-weight:700}
+.readCard{border:1px solid var(--line);background:rgba(255,255,255,.018);border-radius:14px;padding:14px;margin-top:12px}
+.readLabel{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent2);font-weight:900;margin-bottom:4px}
+.patternBox{border:1px solid rgba(139,211,255,.22);background:rgba(139,211,255,.045);border-radius:14px;padding:14px;margin-top:12px}
+.surfaceNote{border:1px solid rgba(245,193,108,.42);background:linear-gradient(135deg,rgba(245,193,108,.13),rgba(245,193,108,.055));border-radius:14px;padding:14px 16px;margin-top:14px;color:#eef2f8}
+.surfaceNote strong{display:block;color:#f5c16c;margin-bottom:6px;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.surfaceNote p{margin:0;color:#eef2f8;line-height:1.65}
+.deeperCue{color:#f2d49a!important;font-weight:700}
+.summaryToggle{margin-top:20px;width:100%;border:1px solid var(--line);border-radius:14px;background:#0d1118;color:var(--muted);padding:11px 12px;font-weight:800;font-size:14px;justify-content:center}
+.summaryWrap{margin-top:12px}
+.logicGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+@media(max-width:640px){.logicGrid{grid-template-columns:1fr}}
+.logicBox{border:1px solid var(--line);border-radius:14px;background:#0d1118;padding:12px}
+.logicLabel{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;margin-bottom:4px}
+.logicValue{font-size:15px;color:var(--text);font-weight:750}
+.requiredNote{font-size:13px;color:#d2d8e4;margin-top:8px}
+.progressText{font-size:13px;color:#d2d8e4;margin:4px 0 0;font-weight:700}
+.readPlaceholder{border:1px dashed var(--line);border-radius:14px;background:rgba(255,255,255,.018);padding:14px;margin-top:18px;color:#d2d8e4}
+.readPlaceholder strong{display:block;color:#f4f4f5;margin-bottom:5px}
+.readPlaceholder p{margin:0;color:#c7ceda}
+.hidden{display:none!important}
+.emailPanel{
+  margin-top:14px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#0d1118;
+  padding:14px;
+}
+.emailRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+@media(max-width:640px){.emailRow{grid-template-columns:1fr}}
+.message{font-size:14px;margin-top:10px;color:var(--muted)}
+.message.ok{color:var(--ok);font-weight:700}
+.message.error{color:var(--danger);font-weight:700}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Acquisition Leak Check</div>
+    <h1>Before you hire lead gen, check the leak.</h1>
+    <p>More leads will not fix a broken offer, weak proof, unclear message, thin credibility path, or loose follow-up. Use this 7-point check before spending money on SDRs, appointment setters, cold email, ads, content, a website rebuild, or another agency.</p>
+    <div class="ctaRow">
+      <a class="button primary" href="#check">Run the 7-point check</a>
+    </div>
+    <div class="pillRow">
+      <span class="pill">Offer clarity</span>
+      <span class="pill">Buyer timing</span>
+      <span class="pill">Proof</span>
+      <span class="pill">Website/profile path</span>
+      <span class="pill">Message relevance</span>
+      <span class="pill">First reply handoff</span>
+      <span class="pill">Volume readiness</span>
+    </div>
+  </section>
+
+  <div class="grid" id="check">
+    <main class="card">
+      <h2>Lead gen readiness check</h2>
+      <p class="muted">Answer the five setup questions, then choose the closest description for each leak area. The free output is a read of where the acquisition system may be leaking before more volume gets added.</p>
+
+      <section class="qualifierBlock">
+        <h3>Setup questions</h3>
+        <p class="small">Required fields shape the read. Optional fields are for capture only. No live fetching happens from the URL.</p>
+        <div class="setupGrid">
+          <div class="field wide">
+            <label for="businessType">1. What kind of work do buyers primarily hire you for? *</label>
+            <select id="businessType" required>
+              <option value="">Choose the closest option</option>
+              <option value="brand_creative_agency">Brand / creative design agency — brand, visual design, creative, campaigns</option>
+              <option value="ui_ux_product_design_studio">UI/UX or product design studio — UX, product design, prototypes, design systems</option>
+              <option value="web_frontend_agency">Web / frontend agency — websites, Webflow, landing pages, frontend builds</option>
+              <option value="digital_product_app_studio">Digital product / app studio — apps, SaaS, product strategy, design-to-build</option>
+              <option value="marketing_growth_agency">Marketing / growth agency — content, paid media, SEO, demand gen, growth</option>
+              <option value="other_service_business">Other service business — consulting, operations, niche services</option>
+            </select>
+            <div class="fieldHint">Choose how the market would usually understand your business, not the perfect internal label.</div>
+          </div>
+          <div class="field">
+            <label for="teamSize">2. Team size? *</label>
+            <select id="teamSize" required>
+              <option value="">Choose one</option>
+              <option value="solo_under_5">Solo or under 5</option>
+              <option value="five_to_twenty">5 to 20</option>
+              <option value="twenty_to_fifty">20 to 50</option>
+              <option value="fifty_plus">50 plus</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="buyerType">3. Who do you primarily sell to? *</label>
+            <select id="buyerType" required>
+              <option value="">Choose one</option>
+              <option value="small_business_owners_founders">Small business owners or founders</option>
+              <option value="marketing_growth_teams">Marketing or growth teams</option>
+              <option value="technical_product_teams">Technical or product teams</option>
+              <option value="enterprise_large_orgs">Enterprise or large organizations</option>
+            </select>
+          </div>
+          <div class="field wide">
+            <label for="nextSpend">4. What are you considering spending money on next? *</label>
+            <select id="nextSpend" required>
+              <option value="">Choose one</option>
+              <option value="lead_gen_agency">Lead gen agency</option>
+              <option value="sdr_appointment_setter">SDR or appointment setter</option>
+              <option value="cold_email_outbound">Cold email or outbound</option>
+              <option value="paid_ads">Paid ads</option>
+              <option value="content_social">Content or social</option>
+              <option value="website_profile_rebuild">Website or profile rebuild</option>
+              <option value="sales_hire">Sales hire</option>
+              <option value="not_sure">Not sure</option>
+            </select>
+          </div>
+          <div class="field wide">
+            <label for="symptom">5. What feels most broken right now? *</label>
+            <select id="symptom" required>
+              <option value="">Choose the closest symptom</option>
+              <option value="not_enough_qualified_conversations">We are not getting enough qualified conversations</option>
+              <option value="interest_no_movement">People show interest but do not move forward</option>
+              <option value="checked_out_no_response">Prospects check us out but do not respond</option>
+              <option value="researched_outreach_ignored">Outreach feels researched but still gets ignored</option>
+              <option value="referrals_inconsistent">Referrals are too inconsistent</option>
+              <option value="activity_not_revenue">We are getting activity but not revenue</option>
+              <option value="not_sure_where_leak_is">We are not sure where the leak is</option>
+            </select>
+            <div class="fieldHint">Pick the closest symptom, even if more than one applies.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="qualifierBlock">
+        <h3>Optional context</h3>
+        <div class="formRow">
+          <div>
+            <label for="companyName">Business name</label>
+            <input id="companyName" placeholder="Optional">
+          </div>
+          <div>
+            <label for="websiteUrl">Website URL</label>
+            <input id="websiteUrl" type="url" placeholder="Optional — no live fetching">
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label for="notes">Notes / context</label>
+          <textarea id="notes" placeholder="Optional: what feels broken, what you are considering, or what you want checked."></textarea>
+        </div>
+      </section>
+
+      <section id="checks"></section>
+      <p class="requiredNote">* Required for the free read to generate cleanly.</p>
+    </main>
+
+    <aside class="card scoreBox">
+      <h2>Your Acquisition Leak Read</h2>
+      <div class="status" id="status">Incomplete</div>
+      <div class="bigScore"><span id="score">0</span><span class="small"> / 35</span></div>
+      <p class="muted" id="interpretation">Complete the five setup questions and seven leak descriptions to generate the read.</p>
+      <p class="progressText" id="progressText">0 of 12 required inputs complete.</p>
+
+      <div class="divider"></div>
+      <h3>Logic signals</h3>
+      <div class="logicGrid">
+        <div class="logicBox">
+          <div class="logicLabel">Primary leak</div>
+          <div class="logicValue" id="primaryLeak">Waiting</div>
+        </div>
+        <div class="logicBox">
+          <div class="logicLabel">Secondary leak</div>
+          <div class="logicValue" id="secondaryLeak">Waiting</div>
+        </div>
+        <div class="logicBox">
+          <div class="logicLabel">Score spread</div>
+          <div class="logicValue" id="scoreSpread">Waiting</div>
+        </div>
+        <div class="logicBox">
+          <div class="logicLabel">Volume warning</div>
+          <div class="logicValue" id="volumeWarning">Waiting</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <h3>Lowest three areas</h3>
+      <ul class="leakList" id="leakList"><li>Waiting for scores.</li></ul>
+
+      <section id="readPlaceholder" class="readPlaceholder">
+        <strong>Surface read will appear here.</strong>
+        <p>Complete the setup questions and the seven leak descriptions. The read stays hidden until the required context is complete, so it does not generate a misleading result.</p>
+      </section>
+
+      <section id="readSection" class="hidden">
+        <div class="divider"></div>
+        <h3>Your surface read</h3>
+        <div class="readText" id="assembledRead"></div>
+
+        <div class="ctaRow" id="completionActions">
+          <button class="ghost" id="copyBtn" type="button">Copy my read</button>
+          <button class="primary" id="emailRevealBtn" type="button">Get the detailed analysis in my inbox</button>
+        </div>
+        <div class="copyNotice" id="copyNotice">Copied. Paste it into a LinkedIn DM or email.</div>
+
+        <div class="emailPanel hidden" id="emailPanel">
+          <div class="emailRow">
+            <div>
+              <label for="emailAddress">Email address</label>
+              <input id="emailAddress" type="email" placeholder="you@example.com" autocomplete="email">
+            </div>
+            <button class="primary" id="sendEmailBtn" type="button">Send me the detailed analysis</button>
+          </div>
+          <div class="message" id="emailMessage"></div>
+        </div>
+      </section>
+
+      <button class="summaryToggle hidden" id="summaryToggle" type="button">View raw summary</button>
+      <div class="summaryWrap hidden" id="summaryWrap">
+        <h3>Generated summary</h3>
+        <div class="resultText" id="summary">Complete the five setup questions and leak descriptions to generate a summary.</div>
+      </div>
+    </aside>
+  </div>
+
+  <p class="footer">Built by Haris Khan. Growth Operations and Acquisition Leak Diagnostics.</p>
+</div>
+
+<script>
+
+/*
+  EmailJS configuration:
+  - Replace the placeholder IDs below inside your deployed file.
+  - Restrict the EmailJS public key to your final hosting domain in EmailJS settings before public launch.
+  - Use two templates: one internal owner notification template and one user-facing summary template.
+*/
+const EMAILJS_SERVICE_ID = 'service_pxbalfd';
+const EMAILJS_OWNER_TEMPLATE_ID = 'template_dxqlvol';
+const EMAILJS_USER_TEMPLATE_ID = 'template_o5epock';
+const EMAILJS_PUBLIC_KEY = 'JqgYhUeVutYxFtCrz';
+const OWNER_EMAIL = 'hknow0188@gmail.com';
+
+if (window.emailjs && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+}
+
+const qualifierLabels = {
+  businessType: {
+    brand_creative_agency: 'Brand / creative design agency',
+    ui_ux_product_design_studio: 'UI/UX or product design studio',
+    web_frontend_agency: 'Web / frontend agency',
+    digital_product_app_studio: 'Digital product / app studio',
+    marketing_growth_agency: 'Marketing / growth agency',
+    other_service_business: 'Other service business'
+  },
+  teamSize: {
+    solo_under_5: 'Solo or under 5',
+    five_to_twenty: '5 to 20',
+    twenty_to_fifty: '20 to 50',
+    fifty_plus: '50 plus'
+  },
+  buyerType: {
+    small_business_owners_founders: 'Small business owners or founders',
+    marketing_growth_teams: 'Marketing or growth teams',
+    technical_product_teams: 'Technical or product teams',
+    enterprise_large_orgs: 'Enterprise or large organizations'
+  },
+  nextSpend: {
+    lead_gen_agency: 'Lead gen agency',
+    sdr_appointment_setter: 'SDR or appointment setter',
+    cold_email_outbound: 'Cold email or outbound',
+    paid_ads: 'Paid ads',
+    content_social: 'Content or social',
+    website_profile_rebuild: 'Website or profile rebuild',
+    sales_hire: 'Sales hire',
+    not_sure: 'Not sure'
+  },
+  symptom: {
+    not_enough_qualified_conversations: 'We are not getting enough qualified conversations',
+    interest_no_movement: 'People show interest but do not move forward',
+    checked_out_no_response: 'Prospects check us out but do not respond',
+    researched_outreach_ignored: 'Outreach feels researched but still gets ignored',
+    referrals_inconsistent: 'Referrals are too inconsistent',
+    activity_not_revenue: 'We are getting activity but not revenue',
+    not_sure_where_leak_is: 'We are not sure where the leak is'
+  }
+};
+
+const leakAreas = [
+  {
+    key: 'offer_clarity',
+    label: 'Offer clarity',
+    prompt: 'Can the buyer understand the offer fast?',
+    priority: 1,
+    options: [
+      'People may understand the service, but not why they should choose it now',
+      'The offer is clear in parts, but still sounds similar to other providers',
+      'The offer makes sense, but the buyer may still need to connect the dots',
+      'The buyer can quickly see who it is for and why it matters',
+      'The offer points to a specific buyer, specific problem, and reason to act now'
+    ]
+  },
+  {
+    key: 'buyer_timing',
+    label: 'Buyer timing',
+    prompt: 'Is the list tied to a real buying moment?',
+    priority: 2,
+    options: [
+      'We mostly target by category, title, industry, or company size',
+      'The accounts fit, but we do not always know why they would care now',
+      'The segment makes sense, but timing signals are inconsistent',
+      'We usually know what changed before reaching out',
+      'We target buyers with clear fit, likely budget, and a current reason to move'
+    ]
+  },
+  {
+    key: 'proof',
+    label: 'Proof',
+    prompt: 'Does proof reduce risk before the call?',
+    priority: 3,
+    options: [
+      'We mostly show claims, screenshots, portfolio pieces, or general testimonials',
+      'We have examples, but they do not fully reduce buyer risk',
+      'Proof is credible, but not strong enough to carry the decision',
+      'The buyer can see examples, thinking, and why the work should be trusted',
+      'Proof shows outcomes, judgment, examples, and trust signals clearly'
+    ]
+  },
+  {
+    key: 'website_profile_path',
+    label: 'Website or profile path',
+    prompt: 'Does the credibility surface support the message?',
+    priority: 4,
+    options: [
+      'Website/profile feels thin, generic, outdated, or inconsistent with the message',
+      'There is some credibility, but the path from message to trust is weak',
+      'The path works, but it probably does not persuade a cautious buyer',
+      'Message, proof, and next step mostly support each other',
+      'The path clearly moves a buyer from interest to trust to next action'
+    ]
+  },
+  {
+    key: 'message_relevance',
+    label: 'Message relevance',
+    prompt: 'Is the message relevant or just personalized?',
+    priority: 5,
+    options: [
+      'The message is polite, but the buyer can ignore it without feeling they missed anything',
+      'The message is personalized, but not tied to a business problem',
+      'The message is relevant, but the ask or proof connection is weak',
+      'There is a clear business reason for the buyer to respond',
+      'The message is specific, timely, low-friction, and connected to proof'
+    ]
+  },
+  {
+    key: 'first_reply_handoff',
+    label: 'First reply handoff',
+    prompt: 'Is interest protected after someone responds?',
+    priority: 6,
+    options: [
+      'Replies are handled case by case, and the next step can be unclear',
+      'Follow-up happens, but warm prospects can still lose momentum',
+      'The handoff works sometimes, but it depends on the person or the day',
+      'There is a clear response path, qualification logic, and next step',
+      'Replies are fast, owned, qualified, and moved to a protected next step'
+    ]
+  },
+  {
+    key: 'volume_readiness',
+    label: 'Volume readiness',
+    prompt: 'Are you ready to add volume without amplifying the leak?',
+    priority: 7,
+    options: [
+      'More outreach, ads, content, or SDR activity would probably create more waste',
+      'Several upstream leaks should be fixed before adding more volume',
+      'Some parts are ready, but volume should be tested carefully',
+      'The system is mostly ready for controlled scaling',
+      'The system is clear enough to add volume with discipline'
+    ]
+  }
+];
+
+const fragments = {
+  "offer_clarity": {
+    "core": "The most expensive acquisition problem is not a lead problem. It is an offer problem that looks like a lead problem. When a buyer lands on the website, reads the pitch, or receives an outreach message, they are running one calculation: why this company, for this specific problem, right now. If that answer takes more than a few seconds to arrive, the buyer moves on, not because the work is bad, but because the offer did not give them a fast enough reason to stay. More outreach, more content, and more leads all amplify this problem. They put more buyers through a door that was already losing them.",
+    "industry": {
+      "brand_creative_agency": "Brand and creative agencies lose this when the work is presented through taste, range, and craft before the buyer understands the business problem the agency is meant to solve.",
+      "ui_ux_product_design_studio": "UI/UX and product design studios lose this when the offer sounds like design activity instead of a sharper promise about product clarity, user friction, or decision quality.",
+      "web_frontend_agency": "Web and frontend agencies lose this when every capability is listed at once, which signals versatility but weakens the sense that the agency is built for the buyer’s specific situation.",
+      "digital_product_app_studio": "Digital product and app studios lose this when the offer leans too heavily on build capability, process, or technical delivery before the buyer understands the commercial reason to start.",
+      "marketing_growth_agency": "Marketing and growth agencies lose this when the offer becomes a menu of channels instead of a clear answer to which revenue problem gets solved first.",
+      "other_service_business": "Other service businesses lose this when they describe what they do instead of what the buyer gets, which leaves the buyer doing the translation work alone."
+    },
+    "size": {
+      "solo_under_5": "At this size, the offer is usually one person's full range of skills rather than a positioned service, which makes it hard for a buyer to know whether they are hiring a specialist or a generalist.",
+      "five_to_twenty": "Teams at this size can offer too many services to keep every seat busy, and the offer reflects that, trying to appeal to everyone and landing clearly with no one.",
+      "twenty_to_fifty": "At this stage, the offer has usually grown with the team rather than been deliberately positioned, which means it reflects internal capability rather than external buyer need.",
+      "fifty_plus": "Larger agencies can run into the opposite problem: the offer has been segmented into so many service lines that no single message carries enough weight to create urgency."
+    },
+    "buyerBridge": {
+      "small_business_owners_founders": "Founders make fast decisions based on whether the offer connects to a live problem they are already losing sleep over. A muddy offer reaches them too late, after they have already shortlisted someone clearer.",
+      "marketing_growth_teams": "Marketing buyers evaluate offers against a specific brief. If the offer does not map cleanly to their brief in the first read, it gets filtered out before it reaches a conversation.",
+      "technical_product_teams": "Technical buyers are pattern-matchers. They are looking for evidence that you have solved their specific problem before. A broad offer gives them no pattern to match against.",
+      "enterprise_large_orgs": "Enterprise buyers work in committees. A muddy offer creates disagreement inside the buying group about whether you are even the right category of solution, and committee disagreement kills deals before they start."
+    }
+  },
+  "buyer_timing": {
+    "core": "A bad list can still look impressive when it is built around the right titles, industries, and company sizes. The leak is timing. Buyers are not equally reachable just because they fit the category. Most are either not feeling the problem yet, already solving it another way, or too early in the internal conversation to care. When the target list is only a category match, outreach has to create urgency from nothing. That is why the campaign feels busy but flat: the work is reaching people who could buy someday, not people with a reason to care now.",
+    "industry": {
+      "brand_creative_agency": "Brand and creative agencies can aim at companies that “need better branding,” but that need only matters when something has changed inside the business, the market, or the buyer’s priorities.",
+      "ui_ux_product_design_studio": "UI/UX and product design studios find timing around moments where product confusion, user friction, roadmap pressure, or stakeholder disagreement has become too expensive to ignore.",
+      "web_frontend_agency": "Web and frontend agencies lose timing when they target companies with imperfect websites instead of companies with a live reason to revisit trust, speed, conversion, launch, or positioning.",
+      "digital_product_app_studio": "Digital product and app studios need timing tied to a real build pressure: a launch, funding event, technical bottleneck, user problem, internal gap, or product bet that cannot sit still.",
+      "marketing_growth_agency": "Marketing and growth agencies miss timing when they target companies that generally want growth instead of companies under live pressure from pipeline, CAC, campaign performance, or stalled demand.",
+      "other_service_business": "Other service businesses need a sharper timing signal because the buyer may not already know when this category becomes urgent."
+    },
+    "size": {
+      "solo_under_5": "At this size, timing usually comes from instinct and recent conversations, which can work until the pipeline depends on a buying moment the founder has not defined.",
+      "five_to_twenty": "Teams at this size may have enough capacity to pursue more accounts, but not enough discipline to separate good-fit companies from companies with a real reason to move.",
+      "twenty_to_fifty": "At this stage, list-building usually becomes more systematic, but the system can still reward firmographics while missing the change event that makes a buyer pay attention.",
+      "fifty_plus": "Larger teams may already have enough data to see timing, but the signal gets buried across departments, tools, territories, and campaigns that are all using slightly different definitions of readiness."
+    },
+    "buyerBridge": {
+      "small_business_owners_founders": "Founders respond when the message lands inside a problem already taking up headspace. If the timing is wrong, even a relevant offer feels like one more thing to think about later.",
+      "marketing_growth_teams": "Marketing and growth buyers are usually tied to active goals, campaigns, launches, and reporting pressure. If the timing is not connected to one of those live pressures, the message gets filed as interesting but non-urgent.",
+      "technical_product_teams": "Technical and product buyers do not move because a vendor sees a possible improvement. They move when the timing lines up with roadmap pressure, delivery risk, user pain, or a system that is starting to drag the team down.",
+      "enterprise_large_orgs": "Enterprise buyers need timing strong enough to survive internal delay. A weak buying moment dies inside the committee before the vendor ever gets a clean chance."
+    }
+  },
+  "proof": {
+    "core": "Proof is not the same as showing work. A portfolio can prove capability and still fail to reduce risk. Before a buyer replies, books, or forwards the company to someone else, they are trying to answer a quieter question: will this be safe to trust? Logos, screenshots, testimonials, case studies, and visible thinking only matter if they help the buyer picture a lower-risk decision. When proof is thin, vague, outdated, or hard to connect to the buyer’s situation, interest stalls before it becomes a conversation.",
+    "industry": {
+      "brand_creative_agency": "Brand and creative agencies can show beautiful work and still leave the buyer wondering whether the work changed anything beyond how the company looked.",
+      "ui_ux_product_design_studio": "UI/UX and product design studios need proof that shows judgment, tradeoffs, and user or business impact, not just polished screens and process diagrams.",
+      "web_frontend_agency": "Web and frontend agencies show finished sites, but the buyer also needs evidence that the work held up under business pressure, technical constraints, and post-launch reality.",
+      "digital_product_app_studio": "Digital product and app studios reduce risk when the buyer can see shipped outcomes, hard decisions, product judgment, and the ability to carry ambiguity without losing the business case.",
+      "marketing_growth_agency": "Marketing and growth agencies need proof that separates activity from revenue movement, because buyers have seen too many campaigns that looked busy and still failed commercially.",
+      "other_service_business": "Other service businesses have to make proof do more work because the buyer has fewer familiar patterns to rely on."
+    },
+    "size": {
+      "solo_under_5": "At this size, proof usually depends heavily on the founder’s personal credibility, which means the buyer has to trust the person before they trust the business.",
+      "five_to_twenty": "Teams at this size usually have enough work to prove something, but the proof is scattered across decks, posts, testimonials, and old project pages with no clear risk-reduction path.",
+      "twenty_to_fifty": "At this stage, the company may have stronger results than its public proof suggests, because delivery has grown faster than the habit of packaging evidence.",
+      "fifty_plus": "Larger teams usually have plenty of proof, but it can become too polished, too generic, or too buried to help a buyer quickly understand why trust is deserved."
+    },
+    "buyerBridge": {
+      "small_business_owners_founders": "Founders are usually buying with personal risk attached. They need proof that makes the decision feel safer, not just work that looks impressive.",
+      "marketing_growth_teams": "Marketing and growth buyers need proof they can defend in a meeting. If the evidence cannot connect to a campaign, target, outcome, or business case, it loses power.",
+      "technical_product_teams": "Technical and product buyers look for signs that the seller understands complexity, edge cases, and constraints. Polished claims do not carry much weight if the proof does not show how the work behaves under pressure.",
+      "enterprise_large_orgs": "Enterprise buyers need proof that can travel. If the evidence cannot survive legal, procurement, finance, technical review, and internal debate, it may never reach the real decision."
+    }
+  },
+  "website_profile_path": {
+    "core": "The message is rarely the only thing being judged. After a buyer sees a post, receives an email, or checks a LinkedIn profile, they usually click somewhere else to verify the signal. That path can either continue the argument or quietly break it. If the website, profile, featured work, content, and proof do not feel like the same company making the same case, trust leaks in the gap. The buyer may not reject the business out loud; they just stop moving.",
+    "industry": {
+      "brand_creative_agency": "Brand and creative agencies can have strong visual surfaces that still fail commercially because the path shows taste before it shows buyer fit, proof, and business relevance.",
+      "ui_ux_product_design_studio": "UI/UX and product design studios are judged on whether their own path feels clear, intentional, and easy to understand; confusion there quietly weakens the claim that they can clarify anyone else’s product.",
+      "web_frontend_agency": "Web and frontend agencies are judged harder on their own path because the buyer reads the agency’s site as evidence of how the agency thinks about everyone else’s site.",
+      "digital_product_app_studio": "Digital product and app studios lose trust when the public path talks like a strategy partner in one place, an engineering shop in another, and a delivery vendor somewhere else.",
+      "marketing_growth_agency": "Marketing and growth agencies weaken the path when their own profile, site, proof, and content do not create the kind of demand logic they claim to build for clients.",
+      "other_service_business": "Other service businesses need the path to do extra translation work because the buyer cannot rely on a familiar category shortcut to understand what they are seeing."
+    },
+    "size": {
+      "solo_under_5": "At this size, the path usually reflects the founder’s history more than the buyer’s journey, so it can feel like a resume when it needs to feel like a credibility surface.",
+      "five_to_twenty": "Teams at this size add pages, posts, services, and proof as they grow, and the path can start to feel assembled rather than intentionally connected.",
+      "twenty_to_fifty": "At this stage, the business may have multiple service lines, audiences, and proof points, which makes the path harder to keep coherent without a clear commercial spine.",
+      "fifty_plus": "Larger companies may have enough material to build trust, but the path gets split across departments, brands, landing pages, and old positioning that no longer tell one story."
+    },
+    "buyerBridge": {
+      "small_business_owners_founders": "Founders check quickly and decide quickly. If the path does not confirm the original reason they paid attention, they move on without needing a formal reason.",
+      "marketing_growth_teams": "Marketing and growth buyers inspect the path for consistency. If the message promises one thing and the website or profile supports another, the buyer sees risk before opportunity.",
+      "technical_product_teams": "Technical and product buyers look for coherence because incoherence usually signals future friction. If the path feels loose, they assume the working process may be loose too.",
+      "enterprise_large_orgs": "Enterprise buyers need a path they can share internally without translating it themselves. If the credibility surface does not carry the argument cleanly, the internal champion has to do too much work."
+    }
+  },
+  "message_relevance": {
+    "core": "Personalization is not the same as relevance. A message can mention the buyer’s company, post, podcast, award, or website and still give them no reason to care. Relevance starts when the message connects to a live business problem, a visible pressure, or a decision the buyer may already be weighing. In a crowded inbox, polite research is not enough. If the buyer cannot see why this message belongs in their day, it becomes another well-written interruption.",
+    "industry": {
+      "brand_creative_agency": "Brand and creative agencies can write messages that admire the brand or the work, but admiration does not create a business reason to respond.",
+      "ui_ux_product_design_studio": "UI/UX and product design studios miss relevance when the message talks about better experience before connecting to a live product, user, conversion, or decision problem.",
+      "web_frontend_agency": "Web and frontend agencies can point at visible site issues, but the message only starts to matter when the issue connects to revenue, trust, speed, conversion, or an active business push.",
+      "digital_product_app_studio": "Digital product and app studios can sound capable and still miss relevance when the message leads with build ability instead of the buyer’s current product pressure.",
+      "marketing_growth_agency": "Marketing and growth agencies lose relevance when the message sounds like another channel pitch instead of a read on the buyer’s actual demand problem.",
+      "other_service_business": "Other service businesses have to earn relevance faster because the buyer has less patience for a message that makes them do the connection work."
+    },
+    "size": {
+      "solo_under_5": "At this size, the message can carry too much of the founder’s thinking at once, which makes it feel heavy before the buyer has agreed there is a reason to engage.",
+      "five_to_twenty": "Teams at this size start using repeatable outreach, and the message can lose the small, sharp connection that made founder-led selling work.",
+      "twenty_to_fifty": "At this stage, messaging passes through more hands, so it becomes safer, broader, and less connected to the exact reason a buyer might reply today.",
+      "fifty_plus": "Larger teams may have enough data to write relevant messages, but the final copy can become flattened by templates, approvals, and campaign logic."
+    },
+    "buyerBridge": {
+      "small_business_owners_founders": "Founders read for immediate business relevance. If the message does not touch a problem they already recognize, it feels like homework from a stranger.",
+      "marketing_growth_teams": "Marketing and growth buyers filter messages against their current targets. If the message cannot connect to a live growth problem, campaign pressure, or pipeline concern, it rarely earns attention.",
+      "technical_product_teams": "Technical and product buyers do not reward flattery or shallow research. They look for signs that the sender understands the actual constraint, not just the surface of the product or stack.",
+      "enterprise_large_orgs": "Enterprise buyers receive messages from every possible vendor category. Relevance has to be strong enough for one person to believe it is worth forwarding into a slow, crowded internal system."
+    }
+  },
+  "first_reply_handoff": {
+    "core": "A reply is not the win. It is the first fragile signal that interest exists. Many acquisition systems lose prospects after the buyer responds because nobody has decided what should happen next, who owns the conversation, what qualifies the opportunity, or how fast the next step should be protected. The leak hides because the business can point to replies and say the campaign worked. But if replies cool into vague chats, delayed follow-ups, unclear pricing, or no next step, the system is leaking after the door opens.",
+    "industry": {
+      "brand_creative_agency": "Brand and creative agencies handle first replies conversationally, which can preserve warmth but lose commercial direction if no one protects the next step.",
+      "ui_ux_product_design_studio": "UI/UX and product design studios need a sharper handoff because interest can quickly split into research, scope, stakeholder alignment, product maturity, and budget questions.",
+      "web_frontend_agency": "Web and frontend agencies lose warm prospects when technical questions, scope questions, content questions, and pricing questions are handled in separate moments instead of one clear path.",
+      "digital_product_app_studio": "Digital product and app studios need strong handoff because a reply can turn into product fit, technical feasibility, timeline, budget, and stakeholder risk almost immediately.",
+      "marketing_growth_agency": "Marketing and growth agencies leak after the first reply when interest turns into a broad strategy chat instead of a qualified path toward the real revenue constraint.",
+      "other_service_business": "Other service businesses need stronger handoff because the first reply usually contains confusion as much as interest."
+    },
+    "size": {
+      "solo_under_5": "At this size, the handoff usually lives in the founder’s head, which works until timing, energy, or too many open threads start deciding which prospects get protected.",
+      "five_to_twenty": "Teams at this size may have enough people to respond, but not enough rules to make sure every reply moves through the same commercial path.",
+      "twenty_to_fifty": "At this stage, handoff leaks appear between roles: marketing creates interest, sales qualifies it, delivery answers scope, and no one fully owns the momentum.",
+      "fifty_plus": "Larger teams can lose warm prospects inside routing, permissions, calendars, qualification rules, and internal ownership gaps that make a buyer wait while the company organizes itself."
+    },
+    "buyerBridge": {
+      "small_business_owners_founders": "Founders tend to reply while the problem is active in their head. If the next step is slow or unclear, attention moves back to the fire they were already fighting.",
+      "marketing_growth_teams": "Marketing and growth buyers expect the first reply to create useful forward motion. If the handoff adds friction, the seller starts to look like another system the buyer would have to manage.",
+      "technical_product_teams": "Technical and product buyers use the first exchange to test how the working relationship will feel. A loose handoff suggests future ambiguity around scope, ownership, and decisions.",
+      "enterprise_large_orgs": "Enterprise replies are narrow openings, not open doors. If the handoff is slow or vague, the internal window can close before the seller understands who else needs to be involved."
+    }
+  },
+  "volume_readiness": {
+    "core": "Volume does not fix a weak acquisition system. It exposes it faster. More leads, more emails, more ads, more posts, or more SDR activity can make the dashboard feel healthier while the actual revenue path gets messier. If the offer, timing, proof, path, message, or handoff is already leaking, volume simply sends more people through the leak. The danger is that the business blames the channel when the real issue is that the system was not ready to absorb more attention.",
+    "industry": {
+      "brand_creative_agency": "Brand and creative agencies feel pressure to add more outreach or content, but volume only helps if the market can quickly understand why this agency is the right kind of creative partner.",
+      "ui_ux_product_design_studio": "UI/UX and product design studios can create more attention with volume, but attention turns thin if the buyer still cannot connect design work to a problem worth acting on.",
+      "web_frontend_agency": "Web and frontend agencies can generate more attention with volume, but attention turns expensive when the proof, site path, and scope conversation are not ready for heavier inspection.",
+      "digital_product_app_studio": "Digital product and app studios scale too early when technical capability is strong but the buyer path is still unclear, which turns more conversations into more complexity.",
+      "marketing_growth_agency": "Marketing and growth agencies are especially exposed to volume leaks because buyers expect them to understand acquisition mechanics inside their own business first.",
+      "other_service_business": "Other service businesses should be careful with volume because more reach can create more confusion if the market does not already understand what to do with the offer."
+    },
+    "size": {
+      "solo_under_5": "At this size, more volume can overwhelm the founder before it improves revenue, because every weak spot still has to be handled manually.",
+      "five_to_twenty": "Teams at this size add volume to feed the team, but a leaky system turns that volume into more admin, more weak calls, and more uneven follow-up.",
+      "twenty_to_fifty": "At this stage, volume can hide the problem for longer because activity rises, reports look busier, and the leak only becomes obvious when qualified pipeline fails to keep pace.",
+      "fifty_plus": "Larger teams can afford more volume, which is exactly why the leak becomes more expensive: bad signals travel through more people, tools, meetings, and budgets before anyone stops the machine."
+    },
+    "buyerBridge": {
+      "small_business_owners_founders": "Founders can feel volume as relief because it creates motion. But if the system is not ready, the motion turns into more noise, more decisions, and more places for good prospects to slip.",
+      "marketing_growth_teams": "Marketing and growth buyers are usually under pressure to increase activity. The risk is that more activity becomes the visible answer while the real leak stays upstream.",
+      "technical_product_teams": "Technical and product buyers notice when volume is being used to force traction before the system is clear. It can make the seller feel operationally immature even when the underlying work is good.",
+      "enterprise_large_orgs": "Enterprise volume is dangerous when the path is not ready because every touch can create a record, an impression, or an objection that travels internally. More exposure does not help if the exposure is carrying the wrong signal."
+    }
+  }
+};
+
+const symptomFragments = {
+  "not_enough_qualified_conversations": {
+    "hook": "You said you are not getting enough qualified conversations. Your lowest scores were {primary_leak} and {secondary_leak}. That combination usually means the system is not just short on leads; it may be failing before the right buyer has enough reason to become a real conversation.",
+    "bridge": "When qualified conversations are missing, the first instinct is to add more names, more messages, or another channel. But low conversation quality usually means the system is not giving the right buyers enough timing, proof, relevance, or trust before asking them to move."
+  },
+  "interest_no_movement": {
+    "hook": "You said people show interest but do not move forward. Your lowest scores were {primary_leak} and {secondary_leak}. That pattern usually means attention exists, but the buyer is not getting enough certainty or direction to keep moving.",
+    "bridge": "Interest without movement is one of the easiest leaks to misread. It feels like the market is close, but the real problem is usually that the next step does not feel safe, clear, urgent, or worth the buyer’s effort."
+  },
+  "checked_out_no_response": {
+    "hook": "You said prospects check you out but do not respond. Your lowest scores were {primary_leak} and {secondary_leak}. That usually means the message may be creating curiosity, but the credibility path is not carrying enough weight after the click.",
+    "bridge": "A profile visit, website visit, or silent check is not neutral. It is the buyer looking for a reason to trust the next step. If that reason does not appear quickly, the system loses them without producing a visible objection."
+  },
+  "researched_outreach_ignored": {
+    "hook": "You said your outreach feels researched but still gets ignored. Your lowest scores were {primary_leak} and {secondary_leak}. That usually means the message may be personalized, but it is not yet connected to a live enough business reason to interrupt the buyer’s day.",
+    "bridge": "Research proves effort, not relevance. Buyers ignore researched messages when the connection still feels like observation instead of commercial timing, risk reduction, or a problem they already recognize."
+  },
+  "referrals_inconsistent": {
+    "hook": "You said referrals are too inconsistent. Your lowest scores were {primary_leak} and {secondary_leak}. That pattern usually means the business may still be relying on borrowed trust instead of a system that can create trust with colder buyers.",
+    "bridge": "Referrals can hide acquisition leaks for a long time because they arrive with trust already attached. The weakness shows up when the same offer, proof, message, and handoff have to work without someone else opening the door first."
+  },
+  "activity_not_revenue": {
+    "hook": "You said you are getting activity but not revenue. Your lowest scores were {primary_leak} and {secondary_leak}. That usually means motion exists, but the path from attention to qualified commercial movement is leaking somewhere before money can follow.",
+    "bridge": "Activity is dangerous because it feels like progress. Posts, clicks, replies, calls, and campaigns can all rise while revenue stays flat if the system is not turning attention into trust, qualification, next steps, and decisions."
+  },
+  "not_sure_where_leak_is": {
+    "hook": "You said you are not sure where the leak is. Your lowest scores were {primary_leak} and {secondary_leak}. That uncertainty is usually the signal itself: the system has enough moving parts that the leak is no longer obvious from activity alone.",
+    "bridge": "When the leak is unclear, changing the channel becomes risky. The system may not need more outreach, more content, more ads, or another hire yet; it may need the first weak point identified before more pressure gets added."
+  }
+};
+
+const universalFragments = {
+  sharpBottleneck: 'The score gap also matters. A spread of three or more points usually means the system is not evenly weak; it has a specific bottleneck that can make stronger parts of the acquisition path look worse than they are.',
+  volumeWarning: 'The volume score is a warning sign. When volume readiness sits at 1 or 2, adding more outreach, ads, content, or sales activity can make the leak more expensive instead of making the system healthier.'
+};
+
+const checksEl = document.getElementById('checks');
+checksEl.innerHTML = leakAreas.map((area,index) => `
+  <div class="check" data-check-key="${area.key}">
+    <div class="checkHead">
+      <h3>${index + 1}. ${area.label}</h3>
+      <span class="small">${area.prompt}</span>
+    </div>
+    <label for="${area.key}_score">Choose the closest current state *</label>
+    <select class="scoreSelect" id="${area.key}_score" data-score-key="${area.key}" data-score-label="${area.label}" data-priority="${area.priority}" required>
+      <option value="">Choose one</option>
+      ${area.options.map((text,i) => `<option value="${i + 1}">${escapeHTML(text)}</option>`).join('')}
+    </select>
+    <div class="scoreExplain" id="${area.key}_explain">Choose the closest description. It does not need to be perfect.</div>
+  </div>
+`).join('');
+
+const els = {
+  businessType: document.getElementById('businessType'),
+  teamSize: document.getElementById('teamSize'),
+  buyerType: document.getElementById('buyerType'),
+  nextSpend: document.getElementById('nextSpend'),
+  symptom: document.getElementById('symptom'),
+  companyName: document.getElementById('companyName'),
+  websiteUrl: document.getElementById('websiteUrl'),
+  notes: document.getElementById('notes'),
+  score: document.getElementById('score'),
+  status: document.getElementById('status'),
+  interpretation: document.getElementById('interpretation'),
+  progressText: document.getElementById('progressText'),
+  primaryLeak: document.getElementById('primaryLeak'),
+  secondaryLeak: document.getElementById('secondaryLeak'),
+  scoreSpread: document.getElementById('scoreSpread'),
+  volumeWarning: document.getElementById('volumeWarning'),
+  leakList: document.getElementById('leakList'),
+  readPlaceholder: document.getElementById('readPlaceholder'),
+  readSection: document.getElementById('readSection'),
+  assembledRead: document.getElementById('assembledRead'),
+  copyBtn: document.getElementById('copyBtn'),
+  copyNotice: document.getElementById('copyNotice'),
+  emailRevealBtn: document.getElementById('emailRevealBtn'),
+  emailPanel: document.getElementById('emailPanel'),
+  emailAddress: document.getElementById('emailAddress'),
+  sendEmailBtn: document.getElementById('sendEmailBtn'),
+  emailMessage: document.getElementById('emailMessage'),
+  summaryToggle: document.getElementById('summaryToggle'),
+  summaryWrap: document.getElementById('summaryWrap'),
+  summary: document.getElementById('summary')
+};
+
+const scoreSelects = [...document.querySelectorAll('select.scoreSelect')];
+const qualifierSelects = [els.businessType, els.teamSize, els.buyerType, els.nextSpend, els.symptom];
+let latestState = null;
+
+function escapeAttribute(value){
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function labelFor(group, value){
+  return qualifierLabels[group][value] || 'Not selected';
+}
+
+function getQualifierData(){
+  return {
+    businessType: els.businessType.value,
+    businessTypeLabel: labelFor('businessType', els.businessType.value),
+    teamSize: els.teamSize.value,
+    teamSizeLabel: labelFor('teamSize', els.teamSize.value),
+    buyerType: els.buyerType.value,
+    buyerTypeLabel: labelFor('buyerType', els.buyerType.value),
+    nextSpend: els.nextSpend.value,
+    nextSpendLabel: labelFor('nextSpend', els.nextSpend.value),
+    symptom: els.symptom.value,
+    symptomLabel: labelFor('symptom', els.symptom.value),
+    companyName: els.companyName.value.trim(),
+    websiteUrl: els.websiteUrl.value.trim(),
+    notes: els.notes.value.trim()
+  };
+}
+
+function getScoreData(){
+  return leakAreas.map(area => {
+    const selected = document.querySelector(`select.scoreSelect[data-score-key="${area.key}"]`);
+    const score = selected && selected.value ? Number(selected.value) : 0;
+    const optionText = score ? area.options[score - 1] : 'Not scored';
+    return {
+      key: area.key,
+      label: area.label,
+      priority: area.priority,
+      score,
+      scoreLabel: score ? `${score} — ${optionText}` : 'Not scored'
+    };
+  });
+}
+
+function getReadStatus(total, completedScores, completedQualifiers){
+  if(completedQualifiers < 5 || completedScores < 7){
+    return {
+      status: 'Incomplete',
+      className: '',
+      text: 'Complete the five setup questions and seven leak descriptions to generate the read.'
+    };
+  }
+
+  if(total <= 17){
+    return {
+      status: 'High leak risk',
+      className: 'danger',
+      text: 'This does not look ready for more volume. The system likely needs inspection before adding another channel, hire, or agency.'
+    };
+  }
+
+  if(total <= 25){
+    return {
+      status: 'Mixed readiness',
+      className: 'warn',
+      text: 'Some parts may support testing, but the weakest areas can still distort the whole acquisition path.'
+    };
+  }
+
+  if(total <= 31){
+    return {
+      status: 'Controlled scale possible',
+      className: '',
+      text: 'The system may be close enough for controlled testing. The lowest-scoring area should still be inspected before increasing spend.'
+    };
+  }
+
+  return {
+    status: 'Strong readiness',
+    className: '',
+    text: 'The system looks relatively ready for volume. Review the lowest-scoring area before spending more aggressively.'
+  };
+}
+
+function analyzeScores(scores){
+  const completed = scores.filter(item => item.score > 0);
+  const sortedLow = [...completed].sort((a,b) => a.score - b.score || a.priority - b.priority);
+  const sortedHigh = [...completed].sort((a,b) => b.score - a.score || a.priority - b.priority);
+  const primary = sortedLow[0] || null;
+  const secondary = sortedLow[1] || null;
+  const lowest = sortedLow[0]?.score || 0;
+  const highest = sortedHigh[0]?.score || 0;
+  const spread = completed.length ? highest - lowest : 0;
+  const sharpBottleneck = completed.length === 7 && spread >= 3;
+  const volume = scores.find(item => item.key === 'volume_readiness');
+  const volumeWarning = Boolean(volume && volume.score > 0 && volume.score <= 2);
+
+  return {
+    completed,
+    primary,
+    secondary,
+    lowest,
+    highest,
+    spread,
+    sharpBottleneck,
+    volumeScore: volume ? volume.score : 0,
+    volumeWarning,
+    lowThree: sortedLow.slice(0,3)
+  };
+}
+
+function getFragment(leakKey, part, qualifierKey){
+  const library = fragments[leakKey];
+  if(!library) return `[${leakKey} fragment pending. This slot uses the same structure as Offer clarity.]`;
+  if(part === 'core') return library.core || `[${leakKey} core fragment pending. This slot uses the same structure as Offer clarity.]`;
+  return library[part]?.[qualifierKey] || `[${leakKey} ${part} fragment pending. This slot uses the same structure as Offer clarity.]`;
+}
+
+function buildLeakReadBlock(leak, qualifiers, heading){
+  return [
+    heading,
+    getFragment(leak.key, 'core'),
+    getFragment(leak.key, 'industry', qualifiers.businessType),
+    getFragment(leak.key, 'size', qualifiers.teamSize)
+  ].join('\n');
+}
+
+function formatSymptomTemplate(template, analysis){
+  if(!template || !analysis.primary || !analysis.secondary) return '';
+  return template
+    .replaceAll('{primary_leak}', analysis.primary.label)
+    .replaceAll('{secondary_leak}', analysis.secondary.label);
+}
+
+function getSymptomHook(qualifiers, analysis){
+  const item = symptomFragments[qualifiers.symptom];
+  return formatSymptomTemplate(item?.hook || '', analysis);
+}
+
+function getSymptomBridge(qualifiers){
+  return symptomFragments[qualifiers.symptom]?.bridge || '';
+}
+
+function buildAssembledRead(qualifiers, analysis, read){
+  if(!analysis.primary || !analysis.secondary) return '';
+
+  const bridgeSourceKey = analysis.primary.key;
+  const symptomHook = getSymptomHook(qualifiers, analysis);
+  const symptomBridge = getSymptomBridge(qualifiers);
+  const parts = [
+    'Your Acquisition Leak Read',
+    `Overall status: ${read.status}`,
+    `Total score: ${analysis.completed.reduce((sum,item) => sum + item.score, 0)}/35`,
+    symptomHook,
+    buildLeakReadBlock(analysis.primary, qualifiers, `Primary leak: ${analysis.primary.label}`),
+    buildLeakReadBlock(analysis.secondary, qualifiers, `Secondary leak: ${analysis.secondary.label}`),
+    symptomBridge,
+    getFragment(bridgeSourceKey, 'buyerBridge', qualifiers.buyerType)
+  ].filter(Boolean);
+
+  if(analysis.sharpBottleneck){
+    parts.push(universalFragments.sharpBottleneck);
+  }
+
+  if(analysis.volumeWarning){
+    parts.push(universalFragments.volumeWarning);
+  }
+
+  return parts.join('\n');
+}
+
+function buildSummary(qualifiers, scores, analysis, read, ready, assembledRead){
+  if(!ready){
+    return 'Complete the setup questions and scores to generate a summary.';
+  }
+
+  const total = scores.reduce((sum,item) => sum + item.score, 0);
+  const scoresText = scores.map(item => `${item.label}: ${item.score}/5 — ${item.scoreLabel}`).join('\n');
+  const lowText = analysis.lowThree.map(item => `- ${item.label}: ${item.score}/5`).join('\n');
+
+  return [
+    'Acquisition Leak Check',
+    `Business/project: ${qualifiers.companyName || '[not provided]'}`,
+    `Website URL: ${qualifiers.websiteUrl || '[not provided]'}`,
+    `Work type: ${qualifiers.businessTypeLabel}`,
+    `Team size: ${qualifiers.teamSizeLabel}`,
+    `Primary buyer: ${qualifiers.buyerTypeLabel}`,
+    `Considering spend on: ${qualifiers.nextSpendLabel}`,
+    `Symptom: ${qualifiers.symptomLabel}`,
+    `Total score: ${total}/35`,
+    `Status: ${read.status}`,
+    `Primary leak: ${analysis.primary ? `${analysis.primary.label} (${analysis.primary.score}/5)` : 'Not available'}`,
+    `Secondary leak: ${analysis.secondary ? `${analysis.secondary.label} (${analysis.secondary.score}/5)` : 'Not available'}`,
+    `Score spread: ${analysis.spread}${analysis.sharpBottleneck ? ' — sharp bottleneck flagged' : ''}`,
+    `Volume warning: ${analysis.volumeWarning ? `Yes — volume readiness scored ${analysis.volumeScore}/5` : 'No'}`,
+    'Interpretation:',
+    read.text,
+    'Scores:',
+    scoresText,
+    'Lowest areas:',
+    lowText,
+    'Notes:',
+    qualifiers.notes || '[not provided]',
+    'Full deeper read:',
+    assembledRead
+  ].join('\n');
+}
+
+function escapeHTML(value){
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function paragraph(text){
+  return `<p>${escapeHTML(text)}</p>`;
+}
+
+function renderAppReadHTML(state){
+  const { qualifiers, analysis, read, total } = state;
+  if(!analysis.primary || !analysis.secondary) return '';
+
+  const symptomHook = getSymptomHook(qualifiers, analysis);
+  const symptomBridge = getSymptomBridge(qualifiers);
+  const primaryCore = getFragment(analysis.primary.key, 'core');
+  const primaryIndustry = getFragment(analysis.primary.key, 'industry', qualifiers.businessType);
+  const primarySize = getFragment(analysis.primary.key, 'size', qualifiers.teamSize);
+  const secondaryCore = getFragment(analysis.secondary.key, 'core');
+  const secondaryIndustry = getFragment(analysis.secondary.key, 'industry', qualifiers.businessType);
+  const secondarySize = getFragment(analysis.secondary.key, 'size', qualifiers.teamSize);
+  const buyerBridge = getFragment(analysis.primary.key, 'buyerBridge', qualifiers.buyerType);
+  const warnings = [];
+  if(analysis.sharpBottleneck) warnings.push(universalFragments.sharpBottleneck);
+  if(analysis.volumeWarning) warnings.push(universalFragments.volumeWarning);
+
+  return `
+    <div class="readIntro">
+      <div class="readKicker">Surface read</div>
+      <h4>What your answers are pointing to</h4>
+      ${paragraph(symptomHook || `Your acquisition system scored ${total}/35. The first two areas to inspect are ${analysis.primary.label} and ${analysis.secondary.label}. This is the surface pattern, not the full diagnosis.`)}
+      <div class="readScoreRow">
+        <span class="readScorePill">Status: ${escapeHTML(read.status)}</span>
+        <span class="readScorePill">Primary: ${escapeHTML(analysis.primary.label)} (${analysis.primary.score}/5)</span>
+        <span class="readScorePill">Secondary: ${escapeHTML(analysis.secondary.label)} (${analysis.secondary.score}/5)</span>
+      </div>
+    </div>
+    <div class="readCard">
+      <div class="readLabel">Primary leak</div>
+      <h4>${escapeHTML(analysis.primary.label)}</h4>
+      ${paragraph(primaryCore)}
+      ${paragraph(primaryIndustry)}
+      ${paragraph(primarySize)}
+    </div>
+    <div class="readCard">
+      <div class="readLabel">Secondary leak</div>
+      <h4>${escapeHTML(analysis.secondary.label)}</h4>
+      ${paragraph(secondaryCore)}
+      ${paragraph(secondaryIndustry)}
+      ${paragraph(secondarySize)}
+    </div>
+    <div class="patternBox">
+      <div class="readLabel">What this pattern usually means</div>
+      ${paragraph(symptomBridge)}
+      ${paragraph(buyerBridge)}
+      ${warnings.map(paragraph).join('')}
+    </div>
+    <div class="surfaceNote">
+      <strong>Surface read only</strong>
+      <p>The read above is based on your answers, not the full context. The actual leak can be better or worse once the offer, proof, buyer path, follow-up flow, and drop-off points are seen together. That missing context is what turns this from a likely pattern into a usable detailed read.</p>
+    </div>
+  `;
+}
+
+function setEmailMessage(text, type=''){
+  els.emailMessage.textContent = text;
+  els.emailMessage.className = `message ${type}`.trim();
+}
+
+function update(){
+  const qualifiers = getQualifierData();
+  const scores = getScoreData();
+  const completedQualifiers = qualifierSelects.filter(select => select.value).length;
+  const completedScores = scores.filter(item => item.score > 0).length;
+  const total = scores.reduce((sum,item) => sum + item.score, 0);
+  const analysis = analyzeScores(scores);
+  const ready = completedQualifiers === 5 && completedScores === 7;
+  const read = getReadStatus(total, completedScores, completedQualifiers);
+  const missingQualifiers = Math.max(0, 5 - completedQualifiers);
+  const missingScores = Math.max(0, 7 - completedScores);
+  const progressCount = completedQualifiers + completedScores;
+  const incompleteText = [];
+  if(missingQualifiers) incompleteText.push(`${missingQualifiers} setup question${missingQualifiers === 1 ? '' : 's'}`);
+  if(missingScores) incompleteText.push(`${missingScores} leak description${missingScores === 1 ? '' : 's'}`);
+  const assembledRead = ready ? buildAssembledRead(qualifiers, analysis, read) : '';
+  const summary = buildSummary(qualifiers, scores, analysis, read, ready, assembledRead);
+
+  els.score.textContent = total;
+  els.status.textContent = read.status;
+  els.status.className = `status ${read.className}`.trim();
+  els.interpretation.textContent = ready ? read.text : `Complete ${incompleteText.join(' and ')} to generate the surface read.`;
+  els.progressText.textContent = `${progressCount} of 12 required inputs complete.`;
+
+  els.primaryLeak.textContent = analysis.primary ? `${analysis.primary.label} (${analysis.primary.score}/5)` : 'Waiting';
+  els.secondaryLeak.textContent = analysis.secondary ? `${analysis.secondary.label} (${analysis.secondary.score}/5)` : 'Waiting';
+  els.scoreSpread.textContent = ready ? `${analysis.spread}${analysis.sharpBottleneck ? ' — sharp bottleneck' : ''}` : 'Waiting';
+  els.volumeWarning.textContent = ready || analysis.volumeScore > 0
+    ? (analysis.volumeWarning ? `Yes — ${analysis.volumeScore}/5` : 'No')
+    : 'Waiting';
+
+  els.leakList.innerHTML = analysis.lowThree.length
+    ? analysis.lowThree.map(item => `<li><strong>${item.label}</strong> — scored ${item.score}/5</li>`).join('')
+    : '<li>Waiting for scores.</li>';
+
+  if(ready){
+    els.readPlaceholder.classList.add('hidden');
+    els.readSection.classList.remove('hidden');
+    els.summaryToggle.classList.remove('hidden');
+    els.assembledRead.innerHTML = renderAppReadHTML({ qualifiers, analysis, read, total });
+  }else{
+    els.readPlaceholder.classList.remove('hidden');
+    els.readSection.classList.add('hidden');
+    els.summaryToggle.classList.add('hidden');
+    els.summaryWrap.classList.add('hidden');
+    els.summaryToggle.textContent = 'View raw summary';
+    els.assembledRead.innerHTML = '';
+    els.emailPanel.classList.add('hidden');
+    setEmailMessage('');
+  }
+
+  els.summary.textContent = summary;
+
+  latestState = { qualifiers, scores, analysis, read, ready, assembledRead, summary, total };
+  return latestState;
+}
+
+function isEmailJSConfigured(){
+  return Boolean(
+    window.emailjs &&
+    EMAILJS_SERVICE_ID !== 'YOUR_SERVICE_ID' &&
+    EMAILJS_OWNER_TEMPLATE_ID !== 'YOUR_OWNER_TEMPLATE_ID' &&
+    EMAILJS_USER_TEMPLATE_ID !== 'YOUR_USER_TEMPLATE_ID' &&
+    EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY'
+  );
+}
+
+function getReadableScore(item){
+  if(!item) return 'Not scored';
+  const labelText = item.scoreLabel.replace(/^\d+\s+—\s+/, '');
+  return `${item.score}/5 — ${labelText}`;
+}
+
+function getScoreByKey(scores, key){
+  return scores.find(item => item.key === key);
+}
+
+function buildEmailParams(state, userEmail){
+  const scoresBlock = state.scores.map(item => `${item.label}: ${getReadableScore(item)}`).join('\n');
+  const scoreOfferClarity = getReadableScore(getScoreByKey(state.scores, 'offer_clarity'));
+  const scoreBuyerTiming = getReadableScore(getScoreByKey(state.scores, 'buyer_timing'));
+  const scoreProof = getReadableScore(getScoreByKey(state.scores, 'proof'));
+  const scoreWebsiteProfilePath = getReadableScore(getScoreByKey(state.scores, 'website_profile_path'));
+  const scoreMessageRelevance = getReadableScore(getScoreByKey(state.scores, 'message_relevance'));
+  const scoreFirstReplyHandoff = getReadableScore(getScoreByKey(state.scores, 'first_reply_handoff'));
+  const scoreVolumeReadiness = getReadableScore(getScoreByKey(state.scores, 'volume_readiness'));
+
+  const primaryTitle = `${state.analysis.primary.label} (${state.analysis.primary.score}/5)`;
+  const secondaryTitle = `${state.analysis.secondary.label} (${state.analysis.secondary.score}/5)`;
+  const primaryCore = getFragment(state.analysis.primary.key, 'core');
+  const primaryIndustry = getFragment(state.analysis.primary.key, 'industry', state.qualifiers.businessType);
+  const primarySize = getFragment(state.analysis.primary.key, 'size', state.qualifiers.teamSize);
+  const secondaryCore = getFragment(state.analysis.secondary.key, 'core');
+  const secondaryIndustry = getFragment(state.analysis.secondary.key, 'industry', state.qualifiers.businessType);
+  const secondarySize = getFragment(state.analysis.secondary.key, 'size', state.qualifiers.teamSize);
+  const buyerBridge = getFragment(state.analysis.primary.key, 'buyerBridge', state.qualifiers.buyerType);
+
+  const symptomBridge = getSymptomBridge(state.qualifiers);
+  const emailHook = getSymptomHook(state.qualifiers, state.analysis) || `Your acquisition system scored ${state.total}/35. The two areas that scored lowest, ${primaryTitle} and ${secondaryTitle}, are where most of the quiet damage usually happens.`;
+  const replyTrigger = 'One caution: this is a surface read based on your answers. The real leak can be better or worse once the offer, proof, buyer path, and follow-up flow are seen in context. If you want the detailed version, reply to this email and I will send a short context form so I can read the system properly.';
+  const bridgeText = 'This free read shows the pattern your answers point toward. The detailed version needs a little more context: your actual offer, proof, buyer path, follow-up process, and what buyers are seeing before they reply or disappear. Reply with deeper analysis and I will send the short context form. It gives me enough to see whether the surface pattern is really the main leak or only a symptom.';
+
+  const ownerMessage = [
+    'New Acquisition Leak Check submission',
+    '',
+    `User email: ${userEmail}`,
+    `Business name: ${state.qualifiers.companyName || '[not provided]'}`,
+    `Website URL: ${state.qualifiers.websiteUrl || '[not provided]'}`,
+    `Work type: ${state.qualifiers.businessTypeLabel}`,
+    `Team size: ${state.qualifiers.teamSizeLabel}`,
+    `Primary buyer: ${state.qualifiers.buyerTypeLabel}`,
+    `Considering spend on: ${state.qualifiers.nextSpendLabel}`,
+    `Symptom: ${state.qualifiers.symptomLabel}`,
+    '',
+    `Total score: ${state.total}/35`,
+    `Status: ${state.read.status}`,
+    `Primary leak: ${primaryTitle}`,
+    `Secondary leak: ${secondaryTitle}`,
+    `Sharp bottleneck: ${state.analysis.sharpBottleneck ? 'Yes' : 'No'}`,
+    `Volume warning: ${state.analysis.volumeWarning ? 'Yes' : 'No'}`,
+    '',
+    'Scores:',
+    scoresBlock,
+    '',
+    'Notes:',
+    state.qualifiers.notes || '[not provided]',
+    '',
+    'Full assembled read:',
+    state.assembledRead
+  ].join('\n');
+
+  const userMessage = [
+    'Your Acquisition Leak Read',
+    '',
+    emailHook,
+    '',
+    replyTrigger,
+    '',
+    `Primary leak: ${primaryTitle}`,
+    primaryCore,
+    primaryIndustry,
+    primarySize,
+    '',
+    `Secondary leak: ${secondaryTitle}`,
+    secondaryCore,
+    secondaryIndustry,
+    secondarySize,
+    '',
+    symptomBridge,
+    buyerBridge,
+    bridgeText,
+    '',
+    'Scores:',
+    scoresBlock
+  ].join('\n');
+
+  const shared = {
+    user_email: userEmail,
+    scores_block: scoresBlock,
+    primary_leak: primaryTitle,
+    secondary_leak: secondaryTitle,
+    total_score: `${state.total}/35`,
+    status: state.read.status,
+    full_read: state.assembledRead,
+    work_type: state.qualifiers.businessTypeLabel,
+    business_type: state.qualifiers.businessTypeLabel,
+    symptom: state.qualifiers.symptomLabel,
+    symptom_bridge: symptomBridge,
+    app_hook: emailHook,
+    primary_core: primaryCore,
+    primary_industry: primaryIndustry,
+    primary_size: primarySize,
+    secondary_core: secondaryCore,
+    secondary_industry: secondaryIndustry,
+    secondary_size: secondarySize,
+    buyer_bridge: buyerBridge,
+    email_hook: emailHook,
+    reply_trigger: replyTrigger,
+    bridge_text: bridgeText,
+    score_offer_clarity: scoreOfferClarity,
+    score_buyer_timing: scoreBuyerTiming,
+    score_proof: scoreProof,
+    score_website_profile_path: scoreWebsiteProfilePath,
+    score_message_relevance: scoreMessageRelevance,
+    score_first_reply_handoff: scoreFirstReplyHandoff,
+    score_volume_readiness: scoreVolumeReadiness
+  };
+
+  return {
+    owner: {
+      ...shared,
+      to_email: OWNER_EMAIL,
+      reply_to: userEmail,
+      business_name: state.qualifiers.companyName || '[not provided]',
+      website_url: state.qualifiers.websiteUrl || '[not provided]',
+      business_type: state.qualifiers.businessTypeLabel,
+      work_type: state.qualifiers.businessTypeLabel,
+      team_size: state.qualifiers.teamSizeLabel,
+      buyer_type: state.qualifiers.buyerTypeLabel,
+      next_spend: state.qualifiers.nextSpendLabel,
+      symptom: state.qualifiers.symptomLabel,
+      sharp_bottleneck: state.analysis.sharpBottleneck ? 'Yes' : 'No',
+      volume_warning: state.analysis.volumeWarning ? 'Yes' : 'No',
+      notes: state.qualifiers.notes || '[not provided]',
+      message: ownerMessage
+    },
+    user: {
+      ...shared,
+      to_email: userEmail,
+      reply_to: OWNER_EMAIL,
+      closing_line: bridgeText,
+      message: userMessage
+    }
+  };
+}
+
+[...qualifierSelects, els.companyName, els.websiteUrl, els.notes].forEach(el => {
+  el.addEventListener('input', update);
+  el.addEventListener('change', update);
+});
+
+scoreSelects.forEach(select => {
+  select.addEventListener('change', () => {
+    const key = select.dataset.scoreKey;
+    const score = Number(select.value || 0);
+    const explain = document.getElementById(`${key}_explain`);
+    const area = leakAreas.find(item => item.key === key);
+    if(explain && area){
+      explain.innerHTML = score
+        ? `<strong>${score}/5 —</strong> ${escapeHTML(area.options[score - 1])}`
+        : 'Choose the closest description. It does not need to be perfect.';
+    }
+    update();
+  });
+});
+
+els.summaryToggle.addEventListener('click', () => {
+  const isHidden = els.summaryWrap.classList.contains('hidden');
+  els.summaryWrap.classList.toggle('hidden', !isHidden);
+  els.summaryToggle.textContent = isHidden ? 'Hide raw summary' : 'View raw summary';
+});
+
+els.copyBtn.addEventListener('click', async () => {
+  const state = update();
+  if(!state.ready) return;
+  try{
+    await navigator.clipboard.writeText(state.summary);
+    els.copyNotice.classList.add('show');
+    setTimeout(() => els.copyNotice.classList.remove('show'), 2200);
+  }catch(error){
+    els.summary.focus();
+  }
+});
+
+els.emailRevealBtn.addEventListener('click', () => {
+  els.emailPanel.classList.remove('hidden');
+  els.emailAddress.focus();
+});
+
+els.sendEmailBtn.addEventListener('click', async () => {
+  const state = update();
+  const userEmail = els.emailAddress.value.trim();
+
+  if(!state.ready){
+    setEmailMessage('Complete the check before sending your read.', 'error');
+    return;
+  }
+
+  if(!userEmail || !els.emailAddress.checkValidity()){
+    setEmailMessage('Enter a valid email address.', 'error');
+    els.emailAddress.focus();
+    return;
+  }
+
+  if(!isEmailJSConfigured()){
+    setEmailMessage('EmailJS is wired but still using placeholder IDs. Replace the service ID, template IDs, and public key before sending live emails.', 'error');
+    return;
+  }
+
+  const params = buildEmailParams(state, userEmail);
+  els.sendEmailBtn.disabled = true;
+  setEmailMessage('Sending...', '');
+
+  try{
+    await Promise.all([
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_OWNER_TEMPLATE_ID, params.owner),
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_USER_TEMPLATE_ID, params.user)
+    ]);
+    setEmailMessage('Sent. Check your inbox for the detailed read.', 'ok');
+  }catch(error){
+    console.error('EmailJS send failed:', error);
+    setEmailMessage('Something went wrong while sending. Check the EmailJS IDs, template variables, and allowed domain settings.', 'error');
+  }finally{
+    els.sendEmailBtn.disabled = false;
+  }
+});
+
+update();
+
+</script>
+</body>
+</html>
